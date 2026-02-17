@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UserDao {
     // CREATE
     public boolean create(LibraryUser user) {
-        String sql = "INSERT INTO \"Library Users\" (user_name) VALUES (?) RETURNING user_id, is_user_member, books_checked_out, made_member_by_librarian";
+        String sql = "INSERT INTO \"Library Users\" (user_name) VALUES (?) RETURNING user_id, is_user_member, check_out_limit, books_checked_out, made_member_by_librarian";
 
         try (Connection conn = Db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -20,8 +20,9 @@ public class UserDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 rs.next();
-                user.setUserId(rs.getInt("user_id"));
+                user.setUser_id(rs.getInt("user_id"));
                 user.setIsUserMember(rs.getBoolean("is_user_member"));
+                user.setCheckOutLimit(rs.getInt("check_out_limit"));
                 user.setBooksCheckedOut(rs.getInt("books_checked_out"));
                 user.setMadeMemberByLibrarian(rs.getInt("made_member_by_librarian"));
                 return true;
@@ -33,7 +34,7 @@ public class UserDao {
 
     // READ (all)
     public List<LibraryUser> findAll() {
-        String sql = "SELECT user_id, user_name, is_user_member, books_checked_out, made_member_by_librarian FROM \"Library Users\" ORDER BY user_id";
+        String sql = "SELECT user_id, user_name, is_user_member, check_out_limit, books_checked_out, made_member_by_librarian FROM \"Library Users\" ORDER BY user_id";
         List<LibraryUser> results = new ArrayList<>();
 
         try (Connection conn = Db.getConnection();
@@ -52,7 +53,7 @@ public class UserDao {
 
     // READ (by id)
     public Optional<LibraryUser> findById(int id) {
-        String sql = "SELECT user_id, user_name, is_user_member, books_checked_out, made_member_by_librarian FROM \"Library Users\" WHERE user_id = ?";
+        String sql = "SELECT user_id, user_name, is_user_member, check_out_limit, books_checked_out, made_member_by_librarian FROM \"Library Users\" WHERE user_id = ?";
 
         try (Connection conn = Db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -71,7 +72,7 @@ public class UserDao {
 
     // UPDATE
     public boolean update(LibraryUser user) {
-        String sql = "UPDATE \"Library Users\" SET user_name = ?, is_user_member = ?, books_checked_out = ?, made_member_by_librarian = ? WHERE user_id = ?";
+        String sql = "UPDATE \"Library Users\" SET user_name = ?, is_user_member = ?, check_out_limit = ?, books_checked_out = ?, made_member_by_librarian = ? WHERE user_id = ?";
 
         try (Connection conn = Db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -82,13 +83,10 @@ public class UserDao {
             } else {
                 ps.setBoolean(2, false);
             }
-            ps.setInt(3, user.getBooksCheckedOut());
-            if (user.getMadeMemberByLibrarian() > 0) {
-                ps.setInt(4, user.getMadeMemberByLibrarian());
-            } else {
-                ps.setNull(4, Types.INTEGER);
-            }
-            ps.setInt(5, user.getUserId());
+            ps.setInt(3, user.getCheckOutLimit());
+            ps.setInt(4, user.getBooksCheckedOut());
+            ps.setInt(5, user.getMadeMemberByLibrarian());
+            ps.setInt(5, user.getUser_id());
 
             int rows = ps.executeUpdate();
             return rows == 1;
@@ -119,6 +117,7 @@ public class UserDao {
                 rs.getInt("user_id"),
                 rs.getString("user_name"),
                 rs.getBoolean("is_user_member"),
+                rs.getInt("check_out_limit"),
                 rs.getInt("books_checked_out"),
                 rs.getInt("made_member_by_librarian")
         );
