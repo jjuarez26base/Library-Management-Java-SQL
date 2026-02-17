@@ -70,7 +70,7 @@ public class BookDao {
 
     // UPDATE
     public boolean update(LibraryBook book) {
-        String sql = "UPDATE \"Library Books\" SET book_name = ?, checked_out = ?, current_user = ?, allowed_by_librarian = ? WHERE book_id = ?";
+        String sql = "UPDATE \"Library Books\" SET book_name = ?, checked_out = ?,  \"current_user\" = ?, allowed_by_librarian = ? WHERE book_id = ?";
 
         try (Connection conn = Db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -82,13 +82,13 @@ public class BookDao {
                 ps.setBoolean(2, false);
             }
 
-            if (book.getCurrentUser().isPresent()) {
-                ps.setInt(3, book.getCurrentUser().get());
+            if (book.isCurrentUserPresent()) {
+                ps.setInt(3, book.getCurrentUser());
             } else {
                 ps.setNull(3, Types.INTEGER);
             }
 
-            if (book.getAllowedByLibrarian().isPresent()) {
+            if (book.getAllowedByLibrarian().isPresent() && book.isLibrarianPresent()) {
                 ps.setInt(4, book.getAllowedByLibrarian().get());
             } else {
                 ps.setNull(4, Types.INTEGER);
