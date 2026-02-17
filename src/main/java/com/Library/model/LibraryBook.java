@@ -17,8 +17,12 @@ public class LibraryBook {
         this.allowedByLibrarian = allowedByLibrarian;
     }
 
-    public LibraryBook(int id, String newBookName, boolean newCheckedOutStatus) {
-        this.id = id;
+    public LibraryBook(String newBookName, boolean newCheckedOutStatus, int newCurrentUser) {
+        this.bookName = newBookName;
+        this.bookCheckedOut = newCheckedOutStatus;
+        this.currentUser = newCurrentUser;
+    }
+    public LibraryBook(String newBookName, boolean newCheckedOutStatus) {
         this.bookName = newBookName;
         this.bookCheckedOut = newCheckedOutStatus;
     }
@@ -35,8 +39,8 @@ public class LibraryBook {
     public Optional<Boolean> isBookCheckedOut() {
         return Optional.of(bookCheckedOut);
     }
-    public int getCurrentUser() {
-        return currentUser;
+    public Optional<Integer> getCurrentUser() {
+        return Optional.of(currentUser);
     }
     public Optional<Integer> getAllowedByLibrarian() {
         return Optional.of(allowedByLibrarian);
@@ -58,26 +62,12 @@ public class LibraryBook {
         this.allowedByLibrarian = allowedByLibrarian;
     }
 
-    public boolean isCurrentUserPresent() {
-        return currentUser > 0;
-    }
-    public boolean isLibrarianPresent() {
-        return allowedByLibrarian > 0;
-    }
-
     @Override
     public String toString() {
-        if (!isCurrentUserPresent()) {
-            return "\nBook Id: " + this.id + '\n'
-                    + "- Book Name: " + this.bookName + '\n'
-                    + "- Book Checked Out: No" + '\n'
-                    + "- Current User: None" + '\n'
-                    + "- Allowed By Librarian: None";
-        }
-        return "\nBook Id: " + this.id + '\n'
-                + "- Book Name: " + this.bookName + '\n'
-                + "- Book Checked Out: Yes" + '\n'
-                + "- Current User: " + this.currentUser + '\n'
-                + "- Allowed By Librarian: " + this.allowedByLibrarian;
+        return "Book Id: " + this.id + '\n'
+                + ", Book Name: " + this.bookName + '\n'
+                + ", Book Checked Out: " + this.bookCheckedOut + '\n'
+                + ", Current User: " + this.currentUser + '\n'
+                + "Allowed By Librarian: " + this.allowedByLibrarian + '\n';
     }
 }
