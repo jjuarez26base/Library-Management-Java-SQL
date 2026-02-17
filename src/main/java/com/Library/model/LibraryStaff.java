@@ -1,7 +1,7 @@
 package com.Library.model;
 
 public class LibraryStaff {
-    private final int id;
+    private int id;
     private String name;
     private String email;
     private boolean working;
@@ -12,6 +12,12 @@ public class LibraryStaff {
         this.email = email;
         this.working = working;
     }
+
+    public LibraryStaff(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
 
     public int getId() {
         return this.id;
@@ -26,6 +32,9 @@ public class LibraryStaff {
         return this.working;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
     public void setName(String name) {
         this.name = name;
     }
@@ -38,10 +47,16 @@ public class LibraryStaff {
 
     @Override
     public String toString() {
-        return "Librarian Id: " + this.id + '\n'
-                + ", Name: " + this.name + '\n'
-                + ", Email: " + this.email + '\n'
-                + ", Working: " + this.working;
+        if (!this.working) {
+            return "\nLibrarian Id: " + this.id + '\n'
+                    + "- Name: " + this.name + '\n'
+                    + "- Email: " + this.email + '\n'
+                    + "- Working: No";
+        }
+        return "\nLibrarian Id: " + this.id + '\n'
+                + "- Name: " + this.name + '\n'
+                + "- Email: " + this.email + '\n'
+                + "- Working: Yes";
     }
 
 }
